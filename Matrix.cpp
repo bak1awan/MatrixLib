@@ -9,13 +9,16 @@ Matrix::Matrix(int nRow, int nCol) : rows(nRow), cols(nCol) {
 	arr = vector<vector<double>>(nRow, vector <double >(nCol, 0));
 }
 
-Matrix Matrix::operator- () {
-	Matrix res(rows, cols);
+// Унарный минус
+Matrix Matrix::operator- () 
+{
+	Matrix result(rows, cols);
 	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < rows; j++)
-			res[i][j] = -arr[i][j];
+		for (int j = 0; j < cols; j++) {
+			result[i][j] = -result[i][j];
+		}
 	}
-	return res;
+	return result;
 }
 
 // Транспонирование матрицы
@@ -184,22 +187,10 @@ const vector<double>& Matrix::operator[] (const int i) const {
 	return arr[i];
 }
 
-// Умножение вектора на число слева
-vector<double> operator* (double n, const vector<double>& v) {
-	vector<double> result(v.size(), 0);
-	for (int i = 0; i < v.size(); i++) {
-		if (abs(n * v[i]) < precision)
-			result[i] = 0;
-		else
-			result[i] = n * v[i];
-	}
-	return result;
-}
-
 void Matrix::cholesky(Matrix& L) {
 	for (int i = 0; i < rows; i++) {
 		double res = 0;
-		
+
 		for (int k = 0; k < i; k++) {
 			res += pow(L[i][k], 2);
 		}
@@ -218,8 +209,8 @@ void Matrix::cholesky(Matrix& L) {
 	}
 }
 
-// Умножение вектора на число справа
-vector<double> operator* (const vector<double>& v, double n) {
+// Умножение вектора на число слева
+vector<double> operator* (double n, const vector<double>& v) {
 	vector<double> result(v.size(), 0);
 	for (int i = 0; i < v.size(); i++) {
 		if (abs(n * v[i]) < precision)
@@ -228,6 +219,35 @@ vector<double> operator* (const vector<double>& v, double n) {
 			result[i] = n * v[i];
 	}
 	return result;
+}
+
+// Умножение вектора на число справа
+vector<double> operator* (const vector<double>& v, double n) {
+	return n * v;
+}
+
+// Вычитание числа из вектора
+vector<double> operator- (const vector<double>& v, double n) {
+	vector<double> result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		result[i] = v[i] - n;
+	}
+	return result;
+}
+
+
+// Сложение вектора с числом слева
+vector<double> operator+ (double n, const vector<double>& v) {
+	vector<double> result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		result[i] = v[i] + n;
+	}
+	return result;
+}
+
+// Сложение вектора с числом справа
+vector<double> operator+ (const vector<double>& v, double n) {
+	return n + v;
 }
 
 // Сложение векторов
@@ -512,4 +532,120 @@ Matrix operator* (const vector<double>& v1, const vector<double>& v2) {
 			res[i][j] = v1[i] * v2[j];
 	}
 	return res;
+}
+
+double& VectorT::operator[](int i) {
+	return v[i];
+}
+
+const double& VectorT::operator[](int i) const {
+	return v[i];
+}
+
+int VectorT::size() {
+	return this->v.size();
+}
+
+// Умножение транспонированного вектора на обычный - число
+double VectorT::operator* (vector<double>& v1) {
+	double result(0);
+	for (int i = 0; i < v.size(); i++)
+		result += v[i] * v1[i];
+	return result;
+}
+
+// Сумма транспонированных векторов
+VectorT VectorT::operator+ (VectorT& v1) {
+	VectorT result(v1.size());
+	for (int i = 0; i < v1.size(); i++)
+		result[i] = v[i] + v1[i];
+	return result;
+}
+
+// Разность транспонированных векторов
+VectorT VectorT::operator- (VectorT& v1) {
+	VectorT result(v1.size());
+	for (int i = 0; i < v1.size(); i++)
+		result[i] = v[i] - v1[i];
+	return result;
+}
+
+// Сложение с числом
+VectorT  VectorT::operator+ (double n) {
+	VectorT result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		result[i] = v[i] + n;
+	}
+	return result;
+}
+
+VectorT operator+ (double n, VectorT& v) {
+	return v + n;
+}
+
+// Вычитание числа
+VectorT VectorT::operator- (double n) {
+	VectorT result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		result[i] = v[i] - n;
+	}
+	return result;
+}
+
+// Умножение на число
+VectorT VectorT::operator* (double n) {
+	VectorT result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		if (abs(n * v[i]) < precision)
+			result[i] = 0;
+		else
+			result[i] = n * v[i];
+	}
+	return result;
+}
+
+VectorT operator* (double n, VectorT& v) {
+	return v * n;
+}
+
+// Деление на число
+VectorT VectorT::operator/ (double n) {
+	VectorT result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		if (abs(n / v[i]) < precision)
+			result[i] = 0;
+		else
+			result[i] = n / v[i];
+	}
+	return result;
+}
+
+// Вывод транспонированного вектора
+ostream& operator<< (ostream& out , VectorT& vT) {
+	for (double el : vT.v) {
+		out << el << ' ';
+	}
+	return out;
+}
+
+// Считывание транспонированного вектора
+istream& operator>> (istream& in, VectorT& vT) {
+	for (int i = 0; i < vT.size(); i++) {
+		cout << " Input [" << i << "]" << " element : ";
+		in >> vT[i];
+	}
+	return in;
+}
+
+Matrix operator* (const vector<double>& v1, const VectorT& v2) {
+	Matrix res(v1.size(), v1.size());
+	for (int i = 0; i < v1.size(); i++) {
+		for (int j = 0; j < v1.size(); j++)
+			res[i][j] = v1[i] * v2[j];
+	}
+	return res;
+}
+
+VectorT transpose(vector<double>& v) {
+	return VectorT(v);
 }

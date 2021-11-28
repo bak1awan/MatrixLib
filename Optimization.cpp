@@ -101,15 +101,13 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 	Matrix I = generateE(x0.size());
 
 	// k - результат скалярного умножения векторов
-	double k = 0;
+	// double k = 0;
 
 	// alpha - специальный коэффициент, определяемый из условий Вульфе, но в нашем случае положенный просто единицей
 	double alpha = 1;
 
 	// Специальные матрица с вектором для промежуточных результатов из-за особенности реализованной мною перегрузки
 	Matrix interM1 = generateE(x0.size());
-	// Matrix interM2 = generateE(x0.size());
-	// Matrix interM3 = generateE(x0.size());
 
 	// Вектора для изменения градиента итерации
 	vector<double> gnow = x0;
@@ -145,13 +143,15 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 		// Определяем вектор y
 		y = gnow - gprev;
 		// Считаем k как скалярное произведение 
-		k = 1.0 / scalarOp(y, s);
+		// k = 1.0 / (transpose(y) * s);
 		// Здесь очень замудренный расчет новой квазиньютоновской матрицы 
 		// из-за особенностей реализованной мною перегрузки операторов для класса Matrix
 		// interM1 = s * y;
 		// interM2 = y * s;
 		// interM3 = s * s;
-		H = ((I - k * s * y) * H * (I - k * y * s)) + (k * s * s);
+		H = ((I - (1.0 / (transpose(y) * s)) * s * transpose(y)) *
+			H * (I - (1.0 / (transpose(y) * s)) * y * transpose(s))) +
+			((1.0 / (transpose(y) * s)) * s * transpose(s));
 	}
 	cout << "The BFGS method find the solution in " << counter << " iterations.\n";
 	// возвращаем результат

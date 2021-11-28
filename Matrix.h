@@ -6,7 +6,7 @@
 
 using namespace std;
 
-
+class VectorT;
 
 class Matrix {
 public:
@@ -18,6 +18,7 @@ public:
 	// транспонирование матрицы
 	Matrix transpose();
 
+	// Унарный минус
 	Matrix operator- ();
 
 	// перегрузка оператора +
@@ -101,13 +102,17 @@ public:
 
 	// поле для инициализации
 	vector<vector<double>> arr;
-
-
 };
 
 // Умножение вектора на число
 vector<double> operator* (double, const vector<double>&);
 vector<double> operator* (const vector<double>&, double);
+
+// Сложение вектора с числом
+vector<double> operator+ (double, const vector<double>&);
+vector<double> operator+ (const vector<double>&, double);
+
+vector<double> operator- (const vector<double>&, double);
 
 // Сложение векторов
 vector<double> operator+ (const vector<double>&, const vector<double>&);
@@ -124,7 +129,72 @@ Matrix operator*(const vector<double>&, const vector<double>&);
 // Скалярное произведение векторов
 double scalarOp(const vector<double>&, const vector<double>&);
 
+VectorT transpose(vector<double>&);
+
 // Генерация единичной матрицы
 Matrix generateE(int);
+
+class VectorT {
+public:
+	VectorT(int size = 1) : v(size) {}
+
+	// Конструктор копирования
+	VectorT(vector<double>& v1) : v(v1) {}
+
+	// Конструктор перемещения
+	VectorT(vector<double>&& v1) : v(v1) {}
+
+	// Конструктор присваивания копированием
+	VectorT operator= (vector<double>& v1) {
+		this->v = v1;
+	}
+
+	// Конструктор присваивания перемещением
+	VectorT operator= (vector<double>&& v1) {
+		this->v = v1;
+	}
+
+	int size();
+
+	// Умножение транспонированного вектора на обычный - число
+	double operator* (vector<double>&);
+
+	// Сумма транспонированных векторов
+	VectorT operator+ (VectorT&);
+
+	// Разность транспонированных векторов
+	VectorT operator- (VectorT&);
+
+	// Оператор []
+	double& operator[](int);
+	const double& operator[](int i) const;
+
+	// Сложение с числом
+	VectorT operator+ (double);
+	friend VectorT operator+ (double, VectorT&);
+
+	// Вычитание числа
+	VectorT operator- (double);
+
+	// Умножение на число
+	VectorT operator* (double);
+	friend VectorT operator* (double, VectorT&);
+
+	// Деление на число
+	VectorT operator/ (double);
+
+	// Вывод транспонированного вектора
+	friend ostream& operator<< (ostream&, VectorT&);
+
+	// Считывание транспонированного вектора
+	friend istream& operator>> (istream&, VectorT&);
+
+private:
+	// Поле, содержащее веткор
+	vector<double> v;
+};
+
+// Умножение обычного вектора на транспонированный - матрица
+Matrix operator* (const vector<double>&, const VectorT&);
 
 #endif
