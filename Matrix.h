@@ -13,7 +13,7 @@ public:
 	// конструктор
 	int rows;
 	int cols;
-	Matrix(int nRow, int nCol);
+	Matrix(int nRow = 1, int nCol = 1);
 
 	// транспонирование матрицы
 	Matrix transpose();
@@ -104,36 +104,6 @@ public:
 	vector<vector<double>> arr;
 };
 
-// Умножение вектора на число
-vector<double> operator* (double, const vector<double>&);
-vector<double> operator* (const vector<double>&, double);
-
-// Сложение вектора с числом
-vector<double> operator+ (double, const vector<double>&);
-vector<double> operator+ (const vector<double>&, double);
-
-vector<double> operator- (const vector<double>&, double);
-
-// Сложение векторов
-vector<double> operator+ (const vector<double>&, const vector<double>&);
-
-// Вычитание векторов
-vector<double> operator- (const vector<double>&, const vector<double>&);
-
-// Вычисление длины вектора
-double vectorLength(const vector<double>&);
-
-// Тензорное произведение векторов
-Matrix operator*(const vector<double>&, const vector<double>&);
-
-// Скалярное произведение векторов
-double scalarOp(const vector<double>&, const vector<double>&);
-
-VectorT transpose(vector<double>&);
-
-// Генерация единичной матрицы
-Matrix generateE(int);
-
 class VectorT {
 public:
 	VectorT(int size = 1) : v(size) {}
@@ -193,6 +163,36 @@ private:
 	// Поле, содержащее веткор
 	vector<double> v;
 };
+
+// Умножение вектора на число
+vector<double> operator* (double, const vector<double>&);
+vector<double> operator* (const vector<double>&, double);
+
+// Сложение вектора с числом
+vector<double> operator+ (double, const vector<double>&);
+vector<double> operator+ (const vector<double>&, double);
+
+vector<double> operator- (const vector<double>&, double);
+
+// Сложение векторов
+vector<double> operator+ (const vector<double>&, const vector<double>&);
+
+// Вычитание векторов
+vector<double> operator- (const vector<double>&, const vector<double>&);
+
+// Вычисление длины вектора
+double vectorLength(const vector<double>&);
+
+// Тензорное произведение векторов
+Matrix operator*(const vector<double>&, const vector<double>&);
+
+// Скалярное произведение векторов
+double scalarOp(const vector<double>&, const vector<double>&);
+
+VectorT transpose(vector<double>&);
+
+// Генерация единичной матрицы
+Matrix generateE(int);
 
 // Умножение обычного вектора на транспонированный - матрица
 Matrix operator* (const vector<double>&, const VectorT&);
