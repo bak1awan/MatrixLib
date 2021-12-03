@@ -7,11 +7,13 @@ using namespace std;
 
 int main() {
 	vector<vector<Matrix>> v;
-	v.reserve(3);
-	vector<Matrix> v1;
-	v1.reserve(3);
-	Matrix E = generateE(3);
-	for (int i = 0; i < 3; i++) v1.push_back(E);
-	for (int i = 0; i < 3; i++) v.push_back(v1);
+	v.resize(3);
+	vector<Matrix>::iterator it;
+	for (int i = 0; i < v.size(); i++) {
+		it = v[i].begin();
+		for (int j = 0; j < v.size(); j++) {
+			it = v[i].emplace(it, 3, 3);
+		}
+	}
 	return 0;
 }
