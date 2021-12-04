@@ -5,14 +5,11 @@
 const double precision = 1e-5;
 const int maxIteration = 40;
 
-Matrix::Matrix(int nRow, int nCol) : rows(nRow), cols(nCol) {
-	arr = vector<vector<double>>(nRow, vector <double >(nCol, 0));
-}
-
 // Унарный минус
-Matrix Matrix::operator- () 
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::operator- ()
 {
-	Matrix result(rows, cols);
+	Matrix<variableType> result(rows, cols);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			result[i][j] = -result[i][j];
@@ -22,8 +19,9 @@ Matrix Matrix::operator- ()
 }
 
 // Транспонирование матрицы
-Matrix Matrix::transpose() {
-	Matrix result(cols, rows);
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::transpose() {
+	Matrix<variableType> result(cols, rows);
 	for (int i = 0; i < result.cols; i++) {
 		for (int j = 0; j < result.rows; j++)
 			result[i][j] = arr[j][i];
@@ -32,8 +30,9 @@ Matrix Matrix::transpose() {
 }
 
 // Сложение матриц
-Matrix Matrix::operator+ (const Matrix& rhs) {
-	Matrix result(*this);
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::operator+ (const Matrix<variableType>& rhs) {
+	Matrix<variableType> result(*this);
 	for (int i = 0; i < result.rows; i++) {
 		for (int j = 0; j < result.cols; j++) {
 			result[i][j] += rhs[i][j];
@@ -43,8 +42,9 @@ Matrix Matrix::operator+ (const Matrix& rhs) {
 }
 
 // Вычитание матриц
-Matrix Matrix::operator- (const Matrix& rhs) {
-	Matrix result(*this);
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::operator- (const Matrix<variableType>& rhs) {
+	Matrix<variableType> result(*this);
 	for (int i = 0; i < result.rows; i++) {
 		for (int j = 0; j < result.cols; j++) {
 			result[i][j] -= rhs[i][j];
@@ -54,8 +54,9 @@ Matrix Matrix::operator- (const Matrix& rhs) {
 }
 
 // Умножение матриц
-Matrix Matrix::operator* (const Matrix& rhs) {
-	Matrix result(rows, rhs.cols);
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::operator* (const Matrix<variableType>& rhs) {
+	Matrix<variableType> result(rows, cols);
 	for (int i = 0; i < result.rows; i++) {
 		for (int j = 0; j < result.cols; j++) {
 			for (int r = 0; r < cols; r++)
@@ -68,23 +69,26 @@ Matrix Matrix::operator* (const Matrix& rhs) {
 }
 
 // Умножение матрицы на вектор справа
-vector<double> operator* (Matrix& A, const vector<double>& x) {
-	vector<double> result(x.size(), 0);
-	for (int i = 0; i < A.cols; i++) {
-		for (int j = 0; j < A.cols; j++)
-			result[i] += A[i][j] * x[j];
+template<typename variableType>
+vector<variableType> Matrix<variableType>::operator* (const vector<variableType>& x) {
+	vector<variableType> result(x.size(), 0);
+	for (int i = 0; i < cols; i++) {
+		for (int j = 0; j < cols; j++)
+			result[i] += arr[i][j] * x[j];
 	}
 	return result;
 }
 
 // Умножение матрицы на вектор слева
-vector<double> operator* (const vector<double>& x, Matrix& A) {
+template<typename variableType>
+vector<variableType> operator* (const vector<variableType>& x, Matrix<variableType>& A) {
 	return A * x;
 }
 
 // Умножение матрицы на число справа
-Matrix operator* (Matrix &A, double n) {
-	Matrix result(A);
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::operator* (variableType n) {
+	Matrix<variableType> result(*this);
 	for (int i = 0; i < result.rows; i++) {
 		for (int j = 0; j < result.cols; j++) {
 			result[i][j] *= n;
@@ -94,18 +98,30 @@ Matrix operator* (Matrix &A, double n) {
 }
 
 // Умножение матрицы на число слева
-Matrix operator* (double n, Matrix& A) {
-	Matrix result(A);
-	for (int i = 0; i < result.rows; i++) {
-		for (int j = 0; j < result.cols; j++) {
-			result[i][j] *= n;
-		}
-	}
+template<typename variableType>
+Matrix<variableType> operator* (variableType n, Matrix<variableType>& A) {
+	return A * n;
+}
+
+// Сложение матрицы с числом справа
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::operator+ (variableType x) {
+	Matrix<variableType> result(rows, cols);
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < cols; j++)
+			result[i][j] = arr[i][j] + x;
 	return result;
 }
 
-// Перегрузка оператора вывода
-std::ostream& operator << (std::ostream& out, const Matrix& A) {
+// Сложение матрицы с числом слева
+template<typename variableType>
+Matrix<variableType> operator+ (variableType x, Matrix<variableType>& A) {
+	return A + x;
+}
+
+// Перегрузка оператора вывода для матриц
+template<typename variableType>
+std::ostream& operator << (std::ostream& out, const Matrix<variableType>& A) {
 	for (int i = 0; i < A.arr.size(); i++) {
 		for (int j = 0; j < A[i].size(); j++) {
 			out << A[i][j] << "\t";
@@ -115,8 +131,9 @@ std::ostream& operator << (std::ostream& out, const Matrix& A) {
 	return out;
 }
 
-// Перегрузка оператора ввода
-std::istream& operator >> (std::istream& in, Matrix& A) {
+// Перегрузка оператора ввода для матриц
+template<typename variableType>
+std::istream& operator >> (std::istream& in, Matrix<variableType>& A) {
 	for (int i = 0; i < A.arr.size(); i++) {
 		for (int j = 0; j < A[i].size(); j++) {
 			cout << " Input [" << i << "]" << "["
@@ -128,16 +145,18 @@ std::istream& operator >> (std::istream& in, Matrix& A) {
 }
 
 // Скалярное произведение векторов
-double scalarOp(const vector<double>& v1, const vector<double>& v2) {
-	double result(0);
+template<typename variableType>
+variableType scalarOp(const vector<variableType>& v1, const vector<variableType>& v2) {
+	variableType result(0);
 	for (int i = 0; i < v1.size(); i++)
 		result += v1[i] * v2[i];
 	return result;
 }
 
 // QR-разложение
-void Matrix::QRDecomp(Matrix& Q, Matrix& R) {
-	Matrix AT = this->transpose();
+template<typename variableType>
+void Matrix<variableType>::QRDecomp(Matrix<variableType>& Q, Matrix<variableType>& R) {
+	Matrix<variableType> AT = this->transpose();
 	for (int i = 0; i < AT.cols; i++) {
 		Q[i] = AT[i];
 		for (int j = 0; j < i; j++)
@@ -149,7 +168,8 @@ void Matrix::QRDecomp(Matrix& Q, Matrix& R) {
 }
 
 // LU-разложение
-void Matrix::LUDecomp(Matrix& L, Matrix& U) {
+template<typename variableType>
+void Matrix<variableType>::LUDecomp(Matrix<variableType>& L, Matrix<variableType>& U) {
 	U = *this;
 
 	for (int k = 1; k < cols; k++)
@@ -165,11 +185,12 @@ void Matrix::LUDecomp(Matrix& L, Matrix& U) {
 }
 
 // Определитель через LU-разложение
-double Matrix::LUDeterminant() {
-	double result = 1;
+template<typename variableType>
+variableType Matrix<variableType>::LUDeterminant() {
+	variableType result = 1;
 
-	Matrix L(rows, cols);
-	Matrix U(rows, cols);
+	Matrix<variableType> L(rows, cols);
+	Matrix<variableType> U(rows, cols);
 
 	this->LUDecomp(L, U);
 
@@ -179,15 +200,20 @@ double Matrix::LUDeterminant() {
 }
 
 // Оператор индексации для матриц
-vector<double>& Matrix::operator[] (const int i) {
+template<typename variableType>
+vector<variableType>& Matrix<variableType>::operator[] (const int i) {
 	return arr[i];
 }
 
-const vector<double>& Matrix::operator[] (const int i) const {
+// Оператор индексации для константных матриц
+template<typename variableType>
+const vector<variableType>& Matrix<variableType>::operator[] (const int i) const {
 	return arr[i];
 }
 
-void Matrix::cholesky(Matrix& L) {
+// Разложение Холецкого
+template<typename variableType>
+void Matrix<variableType>::cholesky(Matrix<variableType>& L) {
 	for (int i = 0; i < rows; i++) {
 		double res = 0;
 
@@ -209,69 +235,13 @@ void Matrix::cholesky(Matrix& L) {
 	}
 }
 
-// Умножение вектора на число слева
-vector<double> operator* (double n, const vector<double>& v) {
-	vector<double> result(v.size(), 0);
-	for (int i = 0; i < v.size(); i++) {
-		if (abs(n * v[i]) < precision)
-			result[i] = 0;
-		else
-			result[i] = n * v[i];
-	}
-	return result;
-}
-
-// Умножение вектора на число справа
-vector<double> operator* (const vector<double>& v, double n) {
-	return n * v;
-}
-
-// Вычитание числа из вектора
-vector<double> operator- (const vector<double>& v, double n) {
-	vector<double> result(v.size());
-	for (int i = 0; i < v.size(); i++) {
-		result[i] = v[i] - n;
-	}
-	return result;
-}
-
-
-// Сложение вектора с числом слева
-vector<double> operator+ (double n, const vector<double>& v) {
-	vector<double> result(v.size());
-	for (int i = 0; i < v.size(); i++) {
-		result[i] = v[i] + n;
-	}
-	return result;
-}
-
-// Сложение вектора с числом справа
-vector<double> operator+ (const vector<double>& v, double n) {
-	return n + v;
-}
-
-// Сложение векторов
-vector<double> operator+ (const vector<double>& v1, const vector<double>& v2) {
-	vector<double> result(v1.size(), 0);
-	for (int i = 0; i < v1.size(); i++)
-		result[i] = v1[i] + v2[i];
-	return result;
-}
-
-// Вычитание векторов
-vector<double> operator- (const vector<double>& v1, const vector<double>& v2) {
-	vector<double> result(v1.size(), 0);
-	for (int i = 0; i < v1.size(); i++)
-		result[i] = v1[i] - v2[i];
-	return result;
-}
-
 // Решение СЛАУ через LU-разложение
-void Matrix::LUSolution(vector<double>& x, const vector<double>& b) {
-	vector<double> y(b.size(), 0);
+template<typename variableType>
+void Matrix<variableType>::LUSolution(vector<variableType>& x, const vector<variableType>& b) {
+	vector<variableType> y(b.size(), 0);
 
-	Matrix L(rows, cols);
-	Matrix U(rows, cols);
+	Matrix<variableType> L(rows, cols);
+	Matrix<variableType> U(rows, cols);
 	this->LUDecomp(L, U);
 
 	for (int i = 0; i < cols; i++) {
@@ -292,13 +262,13 @@ void Matrix::LUSolution(vector<double>& x, const vector<double>& b) {
 }
 
 // Решение СЛАУ через QR-разложение
-void Matrix::QRSolution(vector<double>& x, const vector<double>& b) {
-	Matrix Q(rows, cols);
-	Matrix R(rows, cols);
+template<typename variableType>
+void Matrix<variableType>::QRSolution(vector<variableType>& x, const vector<variableType>& b) {
+	Matrix<variableType> Q(rows, cols);
+	Matrix<variableType> R(rows, cols);
 	this->QRDecomp(Q, R);
-	Matrix Qt = Q.transpose();
-	vector<double> y = Qt * b; // задать вопрос по поводу этой строчки
-
+	Matrix<variableType> Qt = Q.transpose();
+	vector<variableType> y = Qt * b; // задать вопрос по поводу этой строчки
 
 	for (int i = cols - 1; i > -1; i--) {
 		x[i] = y[i];
@@ -310,11 +280,12 @@ void Matrix::QRSolution(vector<double>& x, const vector<double>& b) {
 }
 
 // Собственные числа через QR-разложение
-void Matrix::QREigen(vector<double>& x) {
-	Matrix B(rows, cols);
+template<typename variableType>
+void Matrix<variableType>::QREigen(vector<variableType>& x) {
+	Matrix<variableType> B(rows, cols);
 	B = *this;
-	Matrix Q(rows, cols);
-	Matrix R(rows, cols);
+	Matrix<variableType> Q(rows, cols);
+	Matrix<variableType> R(rows, cols);
 	double error = 0;
 	for (int k = 0; k < maxIteration; k++) {
 		B.QRDecomp(Q, R);
@@ -332,29 +303,14 @@ void Matrix::QREigen(vector<double>& x) {
 		x[i] = B[i][i];
 }
 
-// Вычисление длины вектора через его координаты
-double vectorLength(const vector<double>& v) {
-	double length = 0;
-	for (int i = 0; i < v.size(); i++)
-		length += std::pow(v[i], 2);
-	return std::sqrt(length);
-}
-
-// Генерация единичной матрицы
-Matrix generateE(int size) {
-	Matrix E(size, size);
-	for (int i = 0; i < size; i++)
-		E[i][i] = 1;
-	return E;
-}
-
 // Обратная матрица через LU-разложение
-Matrix Matrix::LUInverse() {
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::LUInverse() {
 	// Генерируем единичную матрицу 
-	Matrix E = generateE(rows);
+	Matrix<variableType> E(rows, cols);
 
 	// Матрица для результатов
-	Matrix X(rows, cols);
+	Matrix<variableType> X(rows, cols);
 
 	// В цикле вызываем решение СЛАУ через LU-разложение со строками матриц X и E
 	for (int i = 0; i < cols; i++)
@@ -365,20 +321,21 @@ Matrix Matrix::LUInverse() {
 }
 
 // Обратная матрица через QR-разложение
-Matrix Matrix::QRInverse() {
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::QRInverse() {
 	// Генерируем матрицы для разложения
-	Matrix Q(rows, cols);
-	Matrix R(rows, cols);
+	Matrix<variableType> Q(rows, cols);
+	Matrix<variableType> R(rows, cols);
 
 	// Получаем матрицы Q и R
 	this->QRDecomp(Q, R);
 
 	// Матрица результатов
-	Matrix X(rows, cols);
+	Matrix<variableType> X(rows, cols);
 
 	// Векторы для расчета
-	vector<double> y(rows, 0);
-	vector<double> x(rows, 0);
+	vector<variableType> y(rows, 0);
+	vector<variableType> x(rows, 0);
 
 	// Получаем строки для матрицы X, так как обращение идет именно по строкам
 	for (int k = 0; k < cols; k++) {
@@ -399,8 +356,9 @@ Matrix Matrix::QRInverse() {
 }
 
 // Норма матрицы
-double Matrix::norm() {
-	double result = 0;
+template<typename variableType>
+variableType Matrix<variableType>::norm() {
+	variableType result = 0;
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < rows; j++)
 			result += pow((*this)[i][j], 2);
@@ -409,14 +367,15 @@ double Matrix::norm() {
 }
 
 // Обратная матрица методом Шульца (Newton-Schulz-Hotelling)
-Matrix Matrix::ShultzInverse(double epsilon) {
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::ShultzInverse(double epsilon) {
 
-	Matrix A = *this;
-	Matrix E = generateE(rows);
-	Matrix phi(rows, cols);
-	Matrix At = A.transpose();
+	Matrix<variableType> A = *this;
+	Matrix<variableType> E(rows, cols);
+	Matrix<variableType> phi(rows, cols);
+	Matrix<variableType> At = A.transpose();
 	// Получили стартовую матрицу X
-	Matrix U = At * (1.0 / (A * At).norm()); // здесь тоже странно работает
+	Matrix<variableType> U = At * (1.0 / (A * At).norm()); // здесь тоже странно работает
 
 	for (int i = 0;; i++) {
 		phi = E - A * U;
@@ -428,9 +387,10 @@ Matrix Matrix::ShultzInverse(double epsilon) {
 }
 
 // Решение СЛАУ через метод Гаусса-Зеделя
-void Matrix::GaussSeidelSolution(vector<double>& x, const vector<double>& b, double epsilon) {
-	Matrix A = *this;
-	vector<double> prev(x.size(), 0);
+template<typename variableType>
+void Matrix<variableType>::GaussSeidelSolution(vector<variableType>& x, const vector<variableType>& b, double epsilon) {
+	Matrix<variableType> A = *this;
+	vector<variableType> prev(x.size(), 0);
 
 	// Проверяем матрицу на диагональное преобладание
 	if (A.diagonal())
@@ -438,7 +398,7 @@ void Matrix::GaussSeidelSolution(vector<double>& x, const vector<double>& b, dou
 		for (int k = 0; k < maxIteration; k++) {
 			prev = x;
 			for (int i = 0; i < rows; i++) {
-				double var = 0;
+				variableType var = 0;
 				for (int j = 0; j < rows; j++)
 					if (j != i) var += (A[i][j] * x[j]);
 
@@ -472,9 +432,10 @@ void Matrix::GaussSeidelSolution(vector<double>& x, const vector<double>& b, dou
 }
 
 // Проверка матрицы на диагональное преобладание
-bool Matrix::diagonal() {
-	Matrix A = *this;
-	double sum;
+template<typename variableType>
+bool Matrix<variableType>::diagonal() {
+	Matrix<variableType> A = *this;
+	variableType sum;
 	for (int i = 0; i < rows; i++) {
 		sum = 0;
 		for (int j = 0; j < rows; j++) 
@@ -488,14 +449,15 @@ bool Matrix::diagonal() {
 }
 
 // Собственное число через соотношение Рэлея
-double Matrix::RayleighEigen(double epsilon) {
-	Matrix A = *this;
-	Matrix E = generateE(rows);
-	vector<double> x(rows, 1);
-	vector<double> y(rows, 0);
-	double sum;
-	double lambda = scalarOp(A * x, x) / scalarOp(x, x);
-	double p;
+template<typename variableType>
+variableType Matrix<variableType>::RayleighEigen(double epsilon) {
+	Matrix<variableType> A = *this;
+	Matrix<variableType> E(rows, cols);
+	vector<variableType> x(rows, 1);
+	vector<variableType> y(rows, 0);
+	variableType sum{};
+	variableType lambda = scalarOp(A * x, x) / scalarOp(x, x);
+	variableType p{};
 	for (int k = 1; k < maxIteration; k++) {
 		sum = 0;
 		p = lambda;
@@ -511,90 +473,97 @@ double Matrix::RayleighEigen(double epsilon) {
 	return lambda;
 }
 
-// Сложение матрицы с числом справа
-Matrix operator+ (Matrix& A, double x) {
-	Matrix result(A.rows, A.cols);
-	for (int i = 0; i < A.rows; i++)
-		for (int j = 0; j < A.cols; j++)
-			result[i][j] = A[i][j] + x;
-	return result;
-}
 
-// Сложение матрицы с числом слева
-Matrix operator+ (double x, Matrix& A) {
-	return A + x;
-}
 
-Matrix operator* (const vector<double>& v1, const vector<double>& v2) {
-	Matrix res(v1.size(), v1.size());
-	for (int i = 0; i < v1.size(); i++) {
-		for (int j = 0; j < v1.size(); j++)
-			res[i][j] = v1[i] * v2[j];
-	}
-	return res;
-}
 
-double& VectorT::operator[](int i) {
+
+
+
+
+/*
+Далее идет часть для функционала класса VectorT
+*/
+
+
+
+
+
+
+// operator[] для VectorT
+template<typename variableType>
+variableType& VectorT<variableType>::operator[](int i) {
 	return v[i];
 }
 
-const double& VectorT::operator[](int i) const {
+// operator[] для константного VectorT
+template<typename variableType>
+const variableType& VectorT<variableType>::operator[](int i) const {
 	return v[i];
 }
 
-int VectorT::size() {
+// Размер вектора VectorT
+template<typename variableType>
+int VectorT<variableType>::size() {
 	return this->v.size();
 }
 
 // Умножение транспонированного вектора на обычный - число
-double VectorT::operator* (vector<double>& v1) {
-	double result(0);
+template<typename variableType>
+variableType VectorT<variableType>::operator* (vector<variableType>& v1) {
+	variableType result(0);
 	for (int i = 0; i < v.size(); i++)
 		result += v[i] * v1[i];
 	return result;
 }
 
 // Сумма транспонированных векторов
-VectorT VectorT::operator+ (VectorT& v1) {
-	VectorT result(v1.size());
+template<typename variableType>
+VectorT<variableType> VectorT<variableType>::operator+ (VectorT<variableType>& v1) {
+	VectorT<variableType> result(v1.size());
 	for (int i = 0; i < v1.size(); i++)
 		result[i] = v[i] + v1[i];
 	return result;
 }
 
 // Разность транспонированных векторов
-VectorT VectorT::operator- (VectorT& v1) {
-	VectorT result(v1.size());
+template<typename variableType>
+VectorT<variableType> VectorT<variableType>::operator- (VectorT<variableType>& v1) {
+	VectorT<variableType> result(v1.size());
 	for (int i = 0; i < v1.size(); i++)
 		result[i] = v[i] - v1[i];
 	return result;
 }
 
-// Сложение с числом
-VectorT  VectorT::operator+ (double n) {
-	VectorT result(v.size());
+// Сложение с числом справа
+template<typename variableType>
+VectorT<variableType>  VectorT<variableType>::operator+ (variableType n) {
+	VectorT<variableType> result(v.size());
 	for (int i = 0; i < v.size(); i++) {
 		result[i] = v[i] + n;
 	}
 	return result;
 }
 
-VectorT operator+ (double n, VectorT& v) {
+// Сложение с числом слева
+template<typename variableType>
+VectorT<variableType> operator+ (variableType n, VectorT<variableType>& v) {
 	return v + n;
 }
 
-// Вычитание числа
-VectorT VectorT::operator- (double n) {
-	VectorT result(v.size());
+// Вычитание числа (возможно только справа)
+template<typename variableType>
+VectorT<variableType> VectorT<variableType>::operator- (variableType n) {
+	VectorT<variableType> result(v.size());
 	for (int i = 0; i < v.size(); i++) {
 		result[i] = v[i] - n;
 	}
 	return result;
 }
 
-// Умножение на число
-VectorT VectorT::operator* (double n) {
-	VectorT result(v.size());
+// Умножение на число справа
+template<typename variableType>
+VectorT<variableType> VectorT<variableType>::operator* (variableType n) {
+	VectorT<variableType> result(v.size());
 	for (int i = 0; i < v.size(); i++) {
 		if (abs(n * v[i]) < precision)
 			result[i] = 0;
@@ -604,13 +573,16 @@ VectorT VectorT::operator* (double n) {
 	return result;
 }
 
-VectorT operator* (double n, VectorT& v) {
+// Умножение на число слева
+template<typename variableType>
+VectorT<variableType> operator* (variableType n, VectorT<variableType>& v) {
 	return v * n;
 }
 
-// Деление на число
-VectorT VectorT::operator/ (double n) {
-	VectorT result(v.size());
+// Деление на число (возможно только справа)
+template<typename variableType>
+VectorT<variableType> VectorT<variableType>::operator/ (variableType n) {
+	VectorT<variableType> result(v.size());
 	for (int i = 0; i < v.size(); i++) {
 		if (abs(n / v[i]) < precision)
 			result[i] = 0;
@@ -621,7 +593,8 @@ VectorT VectorT::operator/ (double n) {
 }
 
 // Вывод транспонированного вектора
-ostream& operator<< (ostream& out , VectorT& vT) {
+template<typename variableType>
+ostream& operator<< (ostream& out , VectorT<variableType>& vT) {
 	for (double el : vT.v) {
 		out << el << ' ';
 	}
@@ -629,7 +602,8 @@ ostream& operator<< (ostream& out , VectorT& vT) {
 }
 
 // Считывание транспонированного вектора
-istream& operator>> (istream& in, VectorT& vT) {
+template<typename variableType>
+istream& operator>> (istream& in, VectorT<variableType>& vT) {
 	for (int i = 0; i < vT.size(); i++) {
 		cout << " Input [" << i << "]" << " element : ";
 		in >> vT[i];
@@ -637,8 +611,10 @@ istream& operator>> (istream& in, VectorT& vT) {
 	return in;
 }
 
-Matrix operator* (const vector<double>& v1, const VectorT& v2) {
-	Matrix res(v1.size(), v1.size());
+// Тензорное умножение векторов
+template<typename variableType>
+Matrix<variableType> operator* (const vector<variableType>& v1, const VectorT<variableType>& v2) {
+	Matrix<variableType> res(v1.size(), v1.size());
 	for (int i = 0; i < v1.size(); i++) {
 		for (int j = 0; j < v1.size(); j++)
 			res[i][j] = v1[i] * v2[j];
@@ -646,6 +622,158 @@ Matrix operator* (const vector<double>& v1, const VectorT& v2) {
 	return res;
 }
 
-VectorT transpose(vector<double>& v) {
-	return VectorT(v);
+// Транспонирование обычного вектора - получаем объект класса VectorT
+template<typename variableType>
+VectorT<variableType> transpose(vector<variableType>& v1) {
+	VectorT<variableType> v2(v1);
+	return v2;
 }
+
+
+
+
+
+
+
+
+
+/*
+Далее идет часть для функционала для встроенных векторов std::vector
+*/
+
+
+
+
+
+
+
+
+
+// Вычисление длины вектора через его координаты
+template<typename variableType>
+variableType vectorLength(const vector<variableType>& v) {
+	variableType length = 0;
+	for (int i = 0; i < v.size(); i++)
+		length += std::pow(v[i], 2);
+	return std::sqrt(length);
+}
+
+// Умножение вектора на число слева
+template<typename variableType>
+vector<variableType> operator* (variableType n, const vector<variableType>& v) {
+	vector<variableType> result(v.size(), 0);
+	for (int i = 0; i < v.size(); i++) {
+		if (abs(n * v[i]) < precision)
+			result[i] = 0;
+		else
+			result[i] = n * v[i];
+	}
+	return result;
+}
+
+// Умножение вектора на число справа
+template<typename variableType>
+vector<variableType> operator* (const vector<variableType>& v, variableType n) {
+	return n * v;
+}
+
+// Вычитание числа из вектора
+template<typename variableType>
+vector<variableType> operator- (const vector<variableType>& v, variableType n) {
+	vector<variableType> result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		result[i] = v[i] - n;
+	}
+	return result;
+}
+
+
+// Сложение вектора с числом слева
+template<typename variableType>
+vector<variableType> operator+ (variableType n, const vector<variableType>& v) {
+	vector<variableType> result(v.size());
+	for (int i = 0; i < v.size(); i++) {
+		result[i] = v[i] + n;
+	}
+	return result;
+}
+
+// Сложение вектора с числом справа
+template<typename variableType>
+vector<variableType> operator+ (const vector<variableType>& v, variableType n) {
+	return n + v;
+}
+
+// Сложение векторов
+template<typename variableType>
+vector<variableType> operator+ (const vector<variableType>& v1, const vector<variableType>& v2) {
+	vector<variableType> result(v1.size(), 0);
+	for (int i = 0; i < v1.size(); i++)
+		result[i] = v1[i] + v2[i];
+	return result;
+}
+
+// Вычитание векторов
+template<typename variableType>
+vector<variableType> operator- (const vector<variableType>& v1, const vector<variableType>& v2) {
+	vector<variableType> result(v1.size(), 0);
+	for (int i = 0; i < v1.size(); i++)
+		result[i] = v1[i] - v2[i];
+	return result;
+}
+
+
+
+
+
+// Шаблоны
+
+
+template class VectorT<float>;
+template class VectorT<double>;
+template class VectorT<long double>;
+
+template class Matrix<float>;
+template class Matrix<double>;
+template class Matrix<long double>;
+
+template ostream& operator << (ostream& out, Matrix<float>& a);
+template ostream& operator << (ostream& out, Matrix<double>& a);
+template ostream& operator << (ostream& out, Matrix<long double>& a);
+
+template ostream& operator << (ostream& out, VectorT<float>& a);
+template ostream& operator << (ostream& out, VectorT<double>& a);
+template ostream& operator << (ostream& out, VectorT<long double>& a);
+
+
+template Matrix<float> operator* (float, Matrix<float>&);
+template Matrix<double> operator* (double, Matrix<double>&);
+template Matrix<long double> operator* (long double, Matrix<long double>&);
+
+
+template vector<float> operator* (const vector<float>&, Matrix<float>&);
+template vector<double> operator* (const vector<double>&, Matrix<double>&);
+template vector<long double> operator* (const vector<long double>&, Matrix<long double>&);
+
+
+template Matrix<float> operator+ (float, Matrix<float>&);
+template Matrix<double> operator+ (double, Matrix<double>&);
+template Matrix<long double> operator+ (long double, Matrix<long double>&);
+
+template VectorT<float> operator+ (float, VectorT<float>&);
+template VectorT<double> operator+ (double, VectorT<double>&);
+template VectorT<long double> operator+ (long double, VectorT<long double>&);
+
+
+template VectorT<float> operator* (float, VectorT<float>&);
+template VectorT<double> operator* (double, VectorT<double>&);
+template VectorT<long double> operator* (long double, VectorT<long double>&);
+
+// Без двух нижних описаний шаблонов не работало
+template Matrix<float> operator* (const vector<float>& v1, const VectorT<float>& v2);
+template Matrix<double> operator* (const vector<double>& v1, const VectorT<double>& v2);
+template Matrix<long double> operator* (const vector<long double>& v1, const VectorT<long double>& v2);
+
+template VectorT<float> transpose(vector<float>& v1);
+template VectorT<double> transpose(vector<double>& v1);
+template VectorT<long double> transpose(vector<long double>& v1);

@@ -6,9 +6,17 @@
 using namespace std;
 
 int main() {
-	vector<vector<Matrix>> v;
+
+	vector<double> v1 = { 1, 2, 3 };
+	VectorT<double> v2 = transpose(v1);
+	Matrix<double> E = v1 * v2;
+
+	// Matrix<double> E = v1 * v2;
+
+	/*
+	vector<vector<Matrix<double>>> v;
 	v.resize(3);
-	vector<Matrix>::iterator it;
+	vector<Matrix<double>>::iterator it;
 	for (int i = 0; i < v.size(); i++) {
 		it = v[i].begin();
 		for (int j = 0; j < v.size(); j++) {
@@ -16,4 +24,6 @@ int main() {
 		}
 	}
 	return 0;
+	*/
+
 }

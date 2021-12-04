@@ -13,7 +13,7 @@ double f3_hyper_ellipsoid(const vector<double>&);
 double f3_test(const vector<double>&);
 double f_diff(const vector<double>&, double (*)(const vector<double>&), int);
 
-Matrix hessian(const vector<double>&, double (*)(const vector<double>&), vector<double>&);
+Matrix<double> hessian(const vector<double>&, double (*)(const vector<double>&), vector<double>&);
 vector<double> newton(const vector<double>&, double (*)(const vector<double>&));
 
 vector<double> gradient(const vector<double>&, double (*)(const vector<double>&));

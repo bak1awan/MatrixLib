@@ -35,8 +35,8 @@ vector<double> gradient(const vector<double>& x, double (*func)(const vector<dou
 	return grad;
 }
 
-Matrix hessian(const vector<double>& x, double (*func)(const vector<double>&), vector<double>& grad) {
-	Matrix hessian(x.size(), x.size());
+Matrix<double> hessian(const vector<double>& x, double (*func)(const vector<double>&), vector<double>& grad) {
+	Matrix<double> hessian(x.size(), x.size());
 	vector<double> xplus = x;
 	vector<double> gplus = grad;
 	for (int i = 0; i < x.size(); i++) {
@@ -78,7 +78,7 @@ vector<double> newton(const vector<double>& x0, double (*func)(const vector<doub
 	vector<double> x = x0;
 	vector<double> grad(x0.size(), 0);
 
-	Matrix hess(x.size(), x.size());
+	Matrix<double> hess(x.size(), x.size());
 
 	const double alpha = 1;
 	int counter = 0;
@@ -93,12 +93,13 @@ vector<double> newton(const vector<double>& x0, double (*func)(const vector<doub
 	return x;
 }
 
+/*
 vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double>&)) {
 	// Начальное приближение квазиньютоновской матрицы
-	Matrix H = generateE(x0.size());
-	
+	Matrix<double> H(x0.size(), x0.size());
+
 	// Единичная матрица для вычислений квазиньютоновской
-	Matrix I = generateE(x0.size());
+	Matrix<double> I(x0.size(), x0.size());
 
 	// k - результат скалярного умножения векторов
 	// double k = 0;
@@ -107,7 +108,7 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 	double alpha = 1;
 
 	// Специальные матрица с вектором для промежуточных результатов из-за особенности реализованной мною перегрузки
-	Matrix interM1 = generateE(x0.size());
+	Matrix<double> interM1(x0.size(), x0.size());
 
 	// Вектора для изменения градиента итерации
 	vector<double> gnow = x0;
@@ -142,9 +143,9 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 		gnow = gradient(xnow, func);
 		// Определяем вектор y
 		y = gnow - gprev;
-		// Считаем k как скалярное произведение 
+		// Считаем k как скалярное произведение
 		// k = 1.0 / (transpose(y) * s);
-		// Здесь очень замудренный расчет новой квазиньютоновской матрицы 
+		// Здесь очень замудренный расчет новой квазиньютоновской матрицы
 		// из-за особенностей реализованной мною перегрузки операторов для класса Matrix
 		// interM1 = s * y;
 		// interM2 = y * s;
@@ -157,3 +158,4 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 	// возвращаем результат
 	return xnow;
 }
+*/

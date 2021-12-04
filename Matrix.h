@@ -6,195 +6,264 @@
 
 using namespace std;
 
+
+// Предварительное объявление класса VectorT
+template <class variableType>
 class VectorT;
 
+
+
+
+
+
+
+
+// Далее следует функционал класса матриц Matrix
+
+
+
+
+
+
+
+
+
+template <class variableType>
 class Matrix {
 public:
-	// конструктор
-	int rows;
-	int cols;
-	Matrix(int nRow = 1, int nCol = 1);
+	// конструктор, по умолчанию генерирует единичную матрицу
+	Matrix(int nRow = 1, int nCol = 1) : rows(nRow), cols(nCol) {
+		arr = vector<vector<variableType>>(nRow, vector <variableType>(nCol, 0));
+		for (int i = 0; i < nRow; i++) {
+			arr[i][i] = 1;
+		}
+	};
 
 	// транспонирование матрицы
-	Matrix transpose();
+	Matrix<variableType> transpose();
 
 	// Унарный минус
-	Matrix operator- ();
+	Matrix<variableType> operator- ();
 
-	// перегрузка оператора +
-	Matrix operator+ (const Matrix&);
+	// перегрузка оператора + с матрицей
+	Matrix<variableType> operator+ (const Matrix<variableType>&);
 
-	// перегрузка оператора -
-	Matrix operator- (const Matrix&);
+	// перегрузка оператора - с матрицей
+	Matrix<variableType> operator- (const Matrix<variableType>&);
 
 	// перегрузка оператора * с матрицей
-	Matrix operator* (const Matrix&);
+	Matrix<variableType> operator* (const Matrix<variableType>&);
 
-	// перегрузка оператора * с числом справа
-	friend Matrix operator* (Matrix&, double);
+	// Умножение матрицы на число справа
+	Matrix<variableType> operator* (variableType);
 
-	// перегрузка оператора * с числом слева
-	friend Matrix operator* (double, Matrix&);
+	// Умножение матрицы на число слева
+	template <class T> friend Matrix<T> operator* (T, Matrix<T>&);
 
-	// перегрузка оператора * с вектором справа
-	friend vector<double> operator* (Matrix&, const vector<double>&);
+	// Умножение матрицы на вектор справа
+	vector<variableType> operator* (const vector<variableType>&);
 
-	// перегрузка оператора * с вектором слева
-	friend vector<double> operator* (const vector<double>&, Matrix&);
+	// Умножение матрицы на вектор слева
+	template <class T> friend vector<T> operator* (const vector<T>&, Matrix<T>&);
 
-	// перегрузка оператора + с числом справа
-	friend Matrix operator+ (Matrix&, double);
+	// Сложение матрицы с числом справа
+	Matrix<variableType> operator+ (variableType);
 
-	// перегрузка оператора + с числом слева
-	friend Matrix operator+ (double, Matrix&);
+	// Сложение матрицы с числом слева
+	template <class T> friend Matrix<T> operator+ (T, Matrix<T>&);
 
-	// перегрузка <<
-	friend std::ostream& operator << (std::ostream&, const Matrix&);
+	// перегрузка << для матриц
+	template <class T> friend ostream& operator << (std::ostream&, Matrix<T>&);
 
-	// перегрузка >>
-	friend std::istream& operator >> (std::istream&, Matrix&);
+	// перегрузка >> для матриц
+	template <class T> friend istream& operator >> (std::istream&, Matrix<T>&);
 
 	// QR-разложение
-	void QRDecomp(Matrix&, Matrix&);
+	void QRDecomp(Matrix<variableType>&, Matrix<variableType>&);
 
 	// LU-разложение
-	void LUDecomp(Matrix&, Matrix&);
+	void LUDecomp(Matrix<variableType>&, Matrix<variableType>&);
 
 	// Определитель через QR-разложение
-	double LUDeterminant();
+	variableType LUDeterminant();
 
 	// Обратная матрица через LU-разложение
-	Matrix LUInverse();
+	Matrix<variableType> LUInverse();
 
 	// Обратная матрица через QR-разложение
-	Matrix QRInverse();
+	Matrix<variableType> QRInverse();
 
 	// Решение СЛАУ методом Гаусса – Зейделя
-	void GaussSeidelSolution(vector<double>&, const vector<double>&, double = 0.001);
+	void GaussSeidelSolution(vector<variableType>&, const vector<variableType>&, double = 0.001);
 
 	// Норма матрицы
-	double norm();
+	variableType norm();
 
 	// Проверка матрицы на диагональное преобладание
 	bool diagonal();
 
 	// Обратная матрица методом Шульца (Newton-Schulz-Hotelling)
-	Matrix ShultzInverse(double = 0.001);
+	Matrix<variableType> ShultzInverse(double = 0.001);
 
 	// Решение СЛАУ через LU-разложение
-	void LUSolution(vector<double>&, const vector<double>&);
+	void LUSolution(vector<variableType>&, const vector<variableType>&);
 
 	// Решение СЛАУ через QR-разложение
-	void QRSolution(vector<double>&, const vector<double>&);
+	void QRSolution(vector<variableType>&, const vector<variableType>&);
 
-	void cholesky(Matrix&);
+	void cholesky(Matrix<variableType>&);
 
 	// Собственные числа через QR-разложение
-	void QREigen(vector<double>&);
+	void QREigen(vector<variableType>&);
 
 	// Собственное число через соотношение Рэлея
-	double RayleighEigen(double = 0.01);
+	variableType RayleighEigen(double = 0.01);
 
 	// Перегрузка оператора [] для матриц
-	vector<double>& operator[] (const int i);
+	vector<variableType>& operator[] (const int i);
 
-	const vector<double>& operator[] (const int i) const;
+	// Перегрузка оператора [] для константных матриц
+	const vector<variableType>& operator[] (const int i) const;
+private:
+	// Сама матрица представляется просто вектором векторов
+	vector<vector<variableType>> arr;
 
-	// поле для инициализации
-	vector<vector<double>> arr;
+	// Количество строк
+	int rows;
+
+	// Количество колонок
+	int cols;
 };
 
+
+
+
+
+
+
+
+
+// Далее следует функционал для нашего класса транспонированных векторов VectorT
+
+
+
+
+
+
+
+
+
+template <class variableType>
 class VectorT {
 public:
+	// Конструктор
 	VectorT(int size = 1) : v(size) {}
 
 	// Конструктор копирования
-	VectorT(vector<double>& v1) : v(v1) {}
+	VectorT(vector<variableType> v1) : v(v1) {}
 
-	// Конструктор перемещения
-	VectorT(vector<double>&& v1) : v(v1) {}
-
-	// Конструктор присваивания копированием
-	VectorT operator= (vector<double>& v1) {
-		this->v = v1;
-	}
-
-	// Конструктор присваивания перемещением
-	VectorT operator= (vector<double>&& v1) {
-		this->v = v1;
-	}
-
+	// Размер вектора VectorT
 	int size();
 
 	// Умножение транспонированного вектора на обычный - число
-	double operator* (vector<double>&);
+	variableType operator* (vector<variableType>&);
 
 	// Сумма транспонированных векторов
-	VectorT operator+ (VectorT&);
+	VectorT<variableType> operator+ (VectorT<variableType>&);
 
 	// Разность транспонированных векторов
-	VectorT operator- (VectorT&);
+	VectorT<variableType> operator- (VectorT<variableType>&);
 
 	// Оператор []
-	double& operator[](int);
-	const double& operator[](int i) const;
+	variableType& operator[](int);
+	const variableType& operator[](int i) const;
 
-	// Сложение с числом
-	VectorT operator+ (double);
-	friend VectorT operator+ (double, VectorT&);
+	// Сложение с числом справа
+	VectorT<variableType> operator+ (variableType);
+
+	// Сложение с числом слева
+	template <class T> friend VectorT<T> operator+ (T, VectorT<T>&);
 
 	// Вычитание числа
-	VectorT operator- (double);
+	VectorT<variableType> operator- (variableType);
 
-	// Умножение на число
-	VectorT operator* (double);
-	friend VectorT operator* (double, VectorT&);
+	// Умножение на число справа
+	VectorT<variableType> operator* (variableType);
 
-	// Деление на число
-	VectorT operator/ (double);
+	// Умножение на число слева
+	template <class T> friend VectorT<T> operator* (T, VectorT<T>&);
+
+	// Деление на число (возможно только справа)
+	VectorT<variableType> operator/ (variableType);
 
 	// Вывод транспонированного вектора
-	friend ostream& operator<< (ostream&, VectorT&);
+	template <class T> friend ostream& operator<< (ostream&, VectorT<T>&);
 
 	// Считывание транспонированного вектора
-	friend istream& operator>> (istream&, VectorT&);
+	template <class T> friend istream& operator>> (istream&, VectorT<T>&);
 
 private:
-	// Поле, содержащее веткор
-	vector<double> v;
+	// Поле, содержащее вектор
+	vector<variableType> v;
 };
 
-// Умножение вектора на число
-vector<double> operator* (double, const vector<double>&);
-vector<double> operator* (const vector<double>&, double);
 
-// Сложение вектора с числом
-vector<double> operator+ (double, const vector<double>&);
-vector<double> operator+ (const vector<double>&, double);
 
-vector<double> operator- (const vector<double>&, double);
+
+
+
+
+
+// Далее следует ункционал для встроенных векторов std::vector
+
+
+
+
+
+
+
+
+// Умножение вектора на число слева
+template<typename variableType>
+vector<variableType> operator* (variableType, const vector<variableType>&);
+
+// Умножение вектора на число справа
+template<typename variableType>
+vector<variableType> operator* (const vector<variableType>&, variableType);
+
+// Сложение вектора с числом слева
+template<typename variableType>
+vector<double> operator+ (variableType, const vector<variableType>&);
+
+// Сложение вектора с числом справа
+template<typename variableType>
+vector<variableType> operator+ (const vector<variableType>&, variableType);
+
+// Вычитание числа из вектора (только справа возможно)
+template<typename variableType>
+vector<variableType> operator- (const vector<variableType>&, variableType);
 
 // Сложение векторов
-vector<double> operator+ (const vector<double>&, const vector<double>&);
+template<typename variableType>
+vector<variableType> operator+ (const vector<variableType>&, const vector<variableType>&);
 
 // Вычитание векторов
-vector<double> operator- (const vector<double>&, const vector<double>&);
+template<typename variableType>
+vector<variableType> operator- (const vector<variableType>&, const vector<variableType>&);
 
 // Вычисление длины вектора
-double vectorLength(const vector<double>&);
-
-// Тензорное произведение векторов
-Matrix operator*(const vector<double>&, const vector<double>&);
+template<typename variableType>
+variableType vectorLength(const vector<variableType>&);
 
 // Скалярное произведение векторов
-double scalarOp(const vector<double>&, const vector<double>&);
+template<typename variableType>
+variableType scalarOp(const vector<variableType>&, const vector<variableType>&);
 
-VectorT transpose(vector<double>&);
+// Транспонирование обычного вектора - получаем объект класса VectorT
+template<typename variableType>
+VectorT<variableType> transpose(vector<variableType>&);
 
-// Генерация единичной матрицы
-Matrix generateE(int);
-
-// Умножение обычного вектора на транспонированный - матрица
-Matrix operator* (const vector<double>&, const VectorT&);
-
+// Тензорное умножение векторов
+template<typename variableType>
+Matrix<variableType> operator* (const vector<variableType>&, const VectorT<variableType>&);
 #endif
