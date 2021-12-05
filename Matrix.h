@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <initializer_list>
 
 using namespace std;
 
@@ -25,7 +26,19 @@ public:
 	// конструктор, по умолчанию генерирует единичную матрицу
 	Matrix(int nRow = 1, int nCol = 1) : rows(nRow), cols(nCol) {
 		arr = vector<vector<variableType>>(nRow, vector<variableType>(nCol, 0));
-	};
+	}
+
+	Matrix(const initializer_list<initializer_list<variableType>>& list) : Matrix(list.size(), list.size()) {
+		int i = 0;
+		for (auto& r : list) {
+			int j = 0;
+			for (auto& c : r) {
+				arr[i][j] = c;
+				j++;
+			}
+			i++;
+		}
+	}
 
 	// транспонирование матрицы
 	Matrix<variableType> transpose() const;

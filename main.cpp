@@ -12,20 +12,13 @@ using namespace std;
 
 int main() {
 
-	Matrix<double> E(4, 4);
-
-	cin >> E;
+	Matrix<double> E{ {2, 5, 7}, {6, 3, 4}, {5, -2, 3} };
 
 	cout << E << '\n';
 
-	Matrix<double> Q(4, 4);
-	Matrix<double> R(4, 4);
+	Matrix<double> L = E.ShultzInverse();
 
-	LUDecomp(E, Q, R);
-
-	cout << Q << '\n';
-
-	cout << R << '\n';
+	cout << setprecision(3) << L << '\n';
 
 	// Matrix<double> E = v1 * v2;
 
