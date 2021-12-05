@@ -1,15 +1,31 @@
-﻿#include <iostream >
-#include "Matrix.h"
+﻿#include <iostream>
 #include <iomanip>
+
+// Наши библиотеки
+#include "Matrix.h"
+#include "LinearSystem.h"
+#include "Eigen.h"
+#include "Decomposition.h"
 #include "Optimization.h"
 
 using namespace std;
 
 int main() {
 
-	vector<double> v1 = { 1, 2, 3 };
-	VectorT<double> v2 = transpose(v1);
-	Matrix<double> E = v1 * v2;
+	Matrix<double> E(4, 4);
+
+	cin >> E;
+
+	cout << E << '\n';
+
+	Matrix<double> Q(4, 4);
+	Matrix<double> R(4, 4);
+
+	LUDecomp(E, Q, R);
+
+	cout << Q << '\n';
+
+	cout << R << '\n';
 
 	// Matrix<double> E = v1 * v2;
 

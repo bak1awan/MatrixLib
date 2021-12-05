@@ -29,7 +29,7 @@ void QREigen(const Matrix<variableType>& A, vector<variableType>& x) {
 template<typename variableType>
 variableType RayleighEigen(const Matrix<variableType>& A, variableType epsilon) {
 	Matrix<variableType> B(A);
-	Matrix<variableType> E(A.rows, A.cols);
+	Matrix<variableType> E = B.generateE(B.rows);
 	vector<variableType> x(A.rows, 1);
 	vector<variableType> y(A.rows, 0);
 	variableType sum{};

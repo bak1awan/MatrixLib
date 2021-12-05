@@ -142,7 +142,7 @@
     <ClCompile Include="Decomposition.cpp" />
     <ClCompile Include="Eigen.cpp" />
     <ClCompile Include="LinearSystem.cpp" />
-    <ClCompile Include="Matrices.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Optimization.cpp" />
   </ItemGroup>

@@ -120,8 +120,8 @@ Matrix<variableType> operator+ (variableType x, Matrix<variableType>& A) {
 
 // Перегрузка оператора вывода для матриц
 template<typename variableType>
-std::ostream& operator << (std::ostream& out, const Matrix<variableType>& A) {
-	for (int i = 0; i < A.arr.size(); i++) {
+std::ostream& operator << (std::ostream& out, Matrix<variableType>& A) {
+	for (int i = 0; i < A.cols; i++) {
 		for (int j = 0; j < A[i].size(); j++) {
 			out << A[i][j] << "\t";
 		}
@@ -183,7 +183,7 @@ variableType Matrix<variableType>::LUDeterminant() {
 template<typename variableType>
 Matrix<variableType> Matrix<variableType>::LUInverse() {
 	// Генерируем единичную матрицу 
-	Matrix<variableType> E(rows, cols);
+	Matrix<variableType> E = this->generateE(rows);
 
 	// Матрица для результатов
 	Matrix<variableType> X(rows, cols);
@@ -247,7 +247,7 @@ template<typename variableType>
 Matrix<variableType> Matrix<variableType>::ShultzInverse(double epsilon) {
 
 	Matrix<variableType> A = *this;
-	Matrix<variableType> E(rows, cols);
+	Matrix<variableType> E = A.generateE(rows);
 	Matrix<variableType> phi(rows, cols);
 	Matrix<variableType> At = A.transpose();
 	// Получили стартовую матрицу X
@@ -278,8 +278,6 @@ bool Matrix<variableType>::diagonal() {
 	}
 	return true;
 }
-
-
 
 
 
@@ -432,6 +430,14 @@ VectorT<variableType> transpose(vector<variableType>& v1) {
 	return v2;
 }
 
+template<typename variableType>
+Matrix<variableType> Matrix<variableType>::generateE(int size) {
+	Matrix<variableType> result(size, size);
+	for (int i = 0; i < size; i++) {
+		result[i][i] = 1;
+	}
+	return result;
+}
 
 
 
@@ -543,14 +549,15 @@ template class Matrix<float>;
 template class Matrix<double>;
 template class Matrix<long double>;
 
-template istream& operator >> (istream& out, Matrix<float>& a);
-template istream& operator >> (istream& out, Matrix<double>& a);
-template istream& operator >> (istream& out, Matrix<long double>& a);
+// Перегрузка оператора ввода для матриц
+template istream& operator >> (istream&, Matrix<float>&);
+template istream& operator >> (istream&, Matrix<double>&);
+template istream& operator >> (istream&, Matrix<long double>&);
 
-// перегрузка << для матриц
-template ostream& operator << (ostream& out, VectorT<float>& a);
-template ostream& operator << (ostream& out, VectorT<double>& a);
-template ostream& operator << (ostream& out, VectorT<long double>& a);
+// перегрузка оператора вывода для матриц
+template ostream& operator << (ostream&, Matrix<float>&);
+template ostream& operator << (ostream&, Matrix<double>&);
+template ostream& operator << (ostream&, Matrix<long double>&);
 
 // Умножение матрицы на число слева
 template Matrix<float> operator* (float, Matrix<float>&);

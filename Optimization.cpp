@@ -94,10 +94,10 @@ vector<double> newton(const vector<double>& x0, double (*func)(const vector<doub
 
 vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double>&)) {
 	// Ќачальное приближение квазиньютоновской матрицы
-	Matrix<double> H(x0.size(), x0.size());
+	Matrix<double> H = H.generateE(x0.size());
 
 	// ≈динична€ матрица дл€ вычислений квазиньютоновской
-	Matrix<double> I(x0.size(), x0.size());
+	Matrix<double> I = I.generateE(x0.size());
 
 	// k - результат скал€рного умножени€ векторов
 	// double k = 0;
@@ -106,7 +106,7 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 	double alpha = 1;
 
 	// —пециальные матрица с вектором дл€ промежуточных результатов из-за особенности реализованной мною перегрузки
-	Matrix<double> interM1(x0.size(), x0.size());
+	Matrix<double> interM1 = interM1.generateE(x0.size());
 
 	// ¬ектора дл€ изменени€ градиента итерации
 	vector<double> gnow = x0;

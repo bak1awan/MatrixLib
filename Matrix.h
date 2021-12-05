@@ -24,10 +24,7 @@ class Matrix {
 public:
 	// конструктор, по умолчанию генерирует единичную матрицу
 	Matrix(int nRow = 1, int nCol = 1) : rows(nRow), cols(nCol) {
-		arr = vector<vector<variableType>>(nRow, vector <variableType>(nCol, 0));
-		for (int i = 0; i < nRow; i++) {
-			arr[i][i] = 1;
-		}
+		arr = vector<vector<variableType>>(nRow, vector<variableType>(nCol, 0));
 	};
 
 	// транспонирование матрицы
@@ -64,10 +61,10 @@ public:
 	template <class T> friend Matrix<T> operator+ (T, Matrix<T>&);
 
 	// перегрузка << для матриц
-	template <class T> friend ostream& operator << (std::ostream&, Matrix<T>&);
+	template <class T> friend ostream& operator << (ostream&, Matrix<T>&);
 
 	// перегрузка >> для матриц
-	template <class T> friend istream& operator >> (std::istream&, Matrix<T>&);
+	template <class T> friend istream& operator >> (istream&, Matrix<T>&);
 
 	// Определитель через QR-разложение
 	variableType LUDeterminant();
@@ -80,6 +77,8 @@ public:
 
 	// Норма матрицы
 	variableType norm();
+
+	Matrix<variableType> generateE(int);
 
 	// Проверка матрицы на диагональное преобладание
 	bool diagonal();
@@ -103,8 +102,6 @@ private:
 	// Сама матрица представляется просто вектором векторов
 	vector<vector<variableType>> arr;
 };
-
-
 
 
 // Далее следует функционал для нашего класса транспонированных векторов VectorT
