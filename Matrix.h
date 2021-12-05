@@ -6,6 +6,8 @@
 
 using namespace std;
 
+const double precision = 1e-5;
+const int maxIteration = 40;
 
 // Предварительное объявление класса VectorT
 template <class variableType>
@@ -13,18 +15,7 @@ class VectorT;
 
 
 
-
-
-
-
-
 // Далее следует функционал класса матриц Matrix
-
-
-
-
-
-
 
 
 
@@ -40,7 +31,7 @@ public:
 	};
 
 	// транспонирование матрицы
-	Matrix<variableType> transpose();
+	Matrix<variableType> transpose() const;
 
 	// Унарный минус
 	Matrix<variableType> operator- ();
@@ -78,12 +69,6 @@ public:
 	// перегрузка >> для матриц
 	template <class T> friend istream& operator >> (std::istream&, Matrix<T>&);
 
-	// QR-разложение
-	void QRDecomp(Matrix<variableType>&, Matrix<variableType>&);
-
-	// LU-разложение
-	void LUDecomp(Matrix<variableType>&, Matrix<variableType>&);
-
 	// Определитель через QR-разложение
 	variableType LUDeterminant();
 
@@ -92,9 +77,6 @@ public:
 
 	// Обратная матрица через QR-разложение
 	Matrix<variableType> QRInverse();
-
-	// Решение СЛАУ методом Гаусса – Зейделя
-	void GaussSeidelSolution(vector<variableType>&, const vector<variableType>&, double = 0.001);
 
 	// Норма матрицы
 	variableType norm();
@@ -105,50 +87,27 @@ public:
 	// Обратная матрица методом Шульца (Newton-Schulz-Hotelling)
 	Matrix<variableType> ShultzInverse(double = 0.001);
 
-	// Решение СЛАУ через LU-разложение
-	void LUSolution(vector<variableType>&, const vector<variableType>&);
-
-	// Решение СЛАУ через QR-разложение
-	void QRSolution(vector<variableType>&, const vector<variableType>&);
-
-	void cholesky(Matrix<variableType>&);
-
-	// Собственные числа через QR-разложение
-	void QREigen(vector<variableType>&);
-
-	// Собственное число через соотношение Рэлея
-	variableType RayleighEigen(double = 0.01);
-
 	// Перегрузка оператора [] для матриц
 	vector<variableType>& operator[] (const int i);
 
 	// Перегрузка оператора [] для константных матриц
 	const vector<variableType>& operator[] (const int i) const;
-private:
-	// Сама матрица представляется просто вектором векторов
-	vector<vector<variableType>> arr;
 
 	// Количество строк
 	int rows;
 
 	// Количество колонок
 	int cols;
+
+private:
+	// Сама матрица представляется просто вектором векторов
+	vector<vector<variableType>> arr;
 };
 
 
 
 
-
-
-
-
-
 // Далее следует функционал для нашего класса транспонированных векторов VectorT
-
-
-
-
-
 
 
 
@@ -209,17 +168,7 @@ private:
 
 
 
-
-
-
-
-
 // Далее следует ункционал для встроенных векторов std::vector
-
-
-
-
-
 
 
 
@@ -233,7 +182,7 @@ vector<variableType> operator* (const vector<variableType>&, variableType);
 
 // Сложение вектора с числом слева
 template<typename variableType>
-vector<double> operator+ (variableType, const vector<variableType>&);
+vector<variableType> operator+ (variableType, const vector<variableType>&);
 
 // Сложение вектора с числом справа
 template<typename variableType>

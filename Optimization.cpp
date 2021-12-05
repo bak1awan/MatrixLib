@@ -5,7 +5,6 @@
 
 const int maxStep = 1000;
 const double h = 1e-5;
-const double precision = 1e-5;
 
 double f3_sphere(const vector<double>& x) {
 	double result = 0;
@@ -93,7 +92,6 @@ vector<double> newton(const vector<double>& x0, double (*func)(const vector<doub
 	return x;
 }
 
-/*
 vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double>&)) {
 	// Ќачальное приближение квазиньютоновской матрицы
 	Matrix<double> H(x0.size(), x0.size());
@@ -158,4 +156,3 @@ vector<double> BFGS(const vector<double>& x0, double (*func)(const vector<double
 	// возвращаем результат
 	return xnow;
 }
-*/
