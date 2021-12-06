@@ -1,5 +1,4 @@
 #include "Eigen.h"
-#include "Decomposition.h"
 #include "LinearSystem.h"
 
 // Собственные числа через QR-разложение
@@ -10,7 +9,7 @@ void QREigen(const Matrix<variableType>& A, vector<variableType>& x) {
 	Matrix<variableType> R(A.rows, A.cols);
 	double error = 0;
 	for (int k = 0; k < maxIteration; k++) {
-		QRDecomp(B, Q, R);
+		B.QRDecomp(Q, R);
 		B = R * Q;
 		error = 0;
 		for (int i = 0; i < A.cols; i++) {
@@ -38,7 +37,8 @@ variableType RayleighEigen(const Matrix<variableType>& A, variableType epsilon) 
 	for (int k = 1; k < maxIteration; k++) {
 		sum = 0;
 		p = lambda;
-		LUSolution(B - E * lambda, y, x);
+		Matrix<variableType> temp = B - E * lambda;
+		LUSolution(temp, y, x);
 		for (int i = 0; i < A.rows; i++)
 			sum += static_cast<variableType>(pow(y[i], 2));
 		sum = sqrt(sum);

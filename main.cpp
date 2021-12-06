@@ -5,7 +5,6 @@
 #include "Matrix.h"
 #include "LinearSystem.h"
 #include "Eigen.h"
-#include "Decomposition.h"
 #include "Optimization.h"
 
 using namespace std;

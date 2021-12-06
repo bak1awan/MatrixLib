@@ -147,7 +147,6 @@
     <ClCompile Include="Optimization.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Decomposition.h" />
     <ClInclude Include="Eigen.h" />
     <ClInclude Include="LinearSystem.h" />
     <ClInclude Include="Matrix.h" />

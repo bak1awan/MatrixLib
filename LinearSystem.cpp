@@ -1,12 +1,11 @@
 #include "LinearSystem.h"
-#include "Decomposition.h"
 
 // Решение СЛАУ через QR-разложение
 template<typename variableType>
-void QRSolution(const Matrix<variableType>& A, vector<variableType>& x, const vector<variableType>& b) {
+void QRSolution(Matrix<variableType>& A, vector<variableType>& x, const vector<variableType>& b) {
 	Matrix<variableType> Q(A.rows, A.cols);
 	Matrix<variableType> R(A.rows, A.cols);
-	QRDecomp(A, Q, R);
+	A.QRDecomp(Q, R);
 	Matrix<variableType> Qt = Q.transpose();
 	vector<variableType> y = Qt * b; // задать вопрос по поводу этой строчки
 
@@ -21,12 +20,12 @@ void QRSolution(const Matrix<variableType>& A, vector<variableType>& x, const ve
 
 // Решение СЛАУ через LU-разложение
 template<typename variableType>
-void LUSolution(const Matrix<variableType>& A, vector<variableType>& x, const vector<variableType>& b) {
+void LUSolution(Matrix<variableType>& A, vector<variableType>& x, const vector<variableType>& b) {
 	vector<variableType> y(b.size(), 0);
 
 	Matrix<variableType> L(A.rows, A.cols);
 	Matrix<variableType> U(A.rows, A.cols);
-	LUDecomp(A, L, U);
+	A.LUDecomp(L, U);
 
 	for (int i = 0; i < A.cols; i++) {
 		y[i] = b[i];
@@ -91,14 +90,14 @@ void GaussSeidelSolution(const Matrix<variableType>& A, vector<variableType>& x,
 }
 
 
-template void QRSolution(const Matrix<float>& A, vector<float>& x, const vector<float>& b);
-template void QRSolution(const Matrix<double>& A, vector<double>& x, const vector<double>& b);
-template void QRSolution(const Matrix<long double>& A, vector<long double>& x, const vector<long double>& b);
+template void QRSolution(Matrix<float>& A, vector<float>& x, const vector<float>& b);
+template void QRSolution(Matrix<double>& A, vector<double>& x, const vector<double>& b);
+template void QRSolution(Matrix<long double>& A, vector<long double>& x, const vector<long double>& b);
 
 
-template void LUSolution(const Matrix<float>& A, vector<float>& x, const vector<float>& b);
-template void LUSolution(const Matrix<double>& A, vector<double>& x, const vector<double>& b);
-template void LUSolution(const Matrix<long double>& A, vector<long double>& x, const vector<long double>& b);
+template void LUSolution(Matrix<float>& A, vector<float>& x, const vector<float>& b);
+template void LUSolution(Matrix<double>& A, vector<double>& x, const vector<double>& b);
+template void LUSolution(Matrix<long double>& A, vector<long double>& x, const vector<long double>& b);
 
 
 template void GaussSeidelSolution(const Matrix<float>& A, vector<float>& x, const vector<float>& b, float epsilon);

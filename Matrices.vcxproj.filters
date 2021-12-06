@@ -47,8 +47,5 @@
     <ClInclude Include="LinearSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Decomposition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

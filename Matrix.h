@@ -88,6 +88,15 @@ public:
 	// Обратная матрица через QR-разложение
 	Matrix<variableType> QRInverse();
 
+	// QR-разложение
+	void QRDecomp(Matrix<variableType>&, Matrix<variableType>&);
+
+	// LU-разложение
+	void LUDecomp(Matrix<variableType>&, Matrix<variableType>&);
+
+	// Разложение Холецкого
+	void cholesky(Matrix<variableType>&);
+
 	// Норма матрицы
 	variableType norm();
 

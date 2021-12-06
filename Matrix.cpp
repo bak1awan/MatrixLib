@@ -1,5 +1,4 @@
 #include "Matrix.h"
-#include "Decomposition.h"
 #include "LinearSystem.h"
 #include <math.h>
 #include <iomanip>
@@ -172,7 +171,7 @@ variableType Matrix<variableType>::LUDeterminant() {
 	Matrix<variableType> L(rows, cols);
 	Matrix<variableType> U(rows, cols);
 
-	LUDecomp(*this, L, U);
+	this->LUDecomp(L, U);
 
 	for (int i = 0; i < cols; i++)
 		result *= U[i][i];
@@ -204,7 +203,7 @@ Matrix<variableType> Matrix<variableType>::QRInverse() {
 	Matrix<variableType> R(rows, cols);
 
 	// Получаем матрицы Q и R
-	QRDecomp(*this, Q, R);
+	this->QRDecomp(Q, R);
 
 	// Матрица результатов
 	Matrix<variableType> X(rows, cols);
@@ -278,6 +277,9 @@ bool Matrix<variableType>::diagonal() {
 	}
 	return true;
 }
+
+
+
 
 
 
