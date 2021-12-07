@@ -28,7 +28,7 @@ public:
 		arr = vector<vector<variableType>>(nRow, vector<variableType>(nCol, 0));
 	}
 
-	Matrix(const initializer_list<initializer_list<variableType>>& list) : Matrix(list.size(), list.size()) {
+	Matrix(const initializer_list<initializer_list<variableType>>& list) : Matrix(list.size(), list.begin()->size()) {
 		int i = 0;
 		for (auto& r : list) {
 			int j = 0;
@@ -97,10 +97,23 @@ public:
 	// Разложение Холецкого
 	void cholesky(Matrix<variableType>&);
 
-	// Норма матрицы
-	variableType norm();
+	// Евклидова норма матрицы
+	variableType euclidean_norm();
 
+	// Матричная (операторная) m-норма
+	variableType m_matrix_norm();
+
+	// Матричная (операторная) l-норма
+	variableType l_matrix_norm();
+
+	// Генерация единичной матрицы
 	Matrix<variableType> generateE(int);
+
+	// Заполнение матрицы определенным значением (функционал для "Занулить элементы матрицы", но расширенный
+	void fillN(variableType);
+
+	// Зануление элементов матрицы ниже определенного значения
+	void zero_less(variableType);
 
 	// Проверка матрицы на диагональное преобладание
 	bool diagonal();

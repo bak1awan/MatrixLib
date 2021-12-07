@@ -230,15 +230,49 @@ Matrix<variableType> Matrix<variableType>::QRInverse() {
 	return X.transpose();
 }
 
-// Норма матрицы
+// Евклидова норма матрицы
 template<typename variableType>
-variableType Matrix<variableType>::norm() {
+variableType Matrix<variableType>::euclidean_norm() {
 	variableType result = 0;
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < rows; j++)
-			result += static_cast<variableType>(pow((*this)[i][j], 2));
+			result += static_cast<variableType>(pow(arr[i][j], 2));
 	}
 	return sqrt(result);
+}
+
+// Матричная (операторная) m-норма
+template<typename variableType>
+variableType Matrix<variableType>::m_matrix_norm() {
+	variableType result;
+	variableType max = -1;
+	for (int i = 0; i < rows; i++) {
+		result = 0;
+		for (int j = 0; j < cols; j++) {
+			result += abs(arr[i][j]);
+		}
+		if (result > max) {
+			max = result;
+		}
+	}
+	return max;
+}
+
+// Матричная (операторная) l-норма
+template<typename variableType>
+variableType Matrix<variableType>::l_matrix_norm() {
+	variableType result;
+	variableType max = -1;
+	for (int j = 0; j < cols; j++) {
+		result = 0;
+		for (int i = 0; i < rows; i++) {
+			result += abs(arr[i][j]);
+		}
+		if (result > max) {
+			max = result;
+		}
+	}
+	return max;
 }
 
 // Обратная матрица методом Шульца (Newton-Schulz-Hotelling)
@@ -250,11 +284,11 @@ Matrix<variableType> Matrix<variableType>::ShultzInverse(double epsilon) {
 	Matrix<variableType> phi(rows, cols);
 	Matrix<variableType> At = A.transpose();
 	// Получили стартовую матрицу X
-	Matrix<variableType> U = At * (1.0 / (A * At).norm()); // здесь тоже странно работает
+	Matrix<variableType> U = At * (1.0 / (A * At).euclidean_norm()); // здесь тоже странно работает
 
 	for (int i = 0;; i++) {
 		phi = E - A * U;
-		if (phi.norm() < epsilon) break;
+		if (phi.euclidean_norm() < epsilon) break;
 		U = U * (E + phi);
 	}
 
@@ -278,7 +312,25 @@ bool Matrix<variableType>::diagonal() {
 	return true;
 }
 
+// Заполнение матрицы определенным значением (функционал для "Занулить элементы матрицы", но расширенный
+template<typename variableType>
+void Matrix<variableType>::fillN(variableType n) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			arr[i][j] = n;
+		}
+	}
+}
 
+// Зануление элементов матрицы ниже определенного значения
+template<typename variableType>
+void Matrix<variableType>::zero_less(variableType n) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			if (arr[i][j] < n) arr[i][j] = 0;
+		}
+	}
+}
 
 
 
