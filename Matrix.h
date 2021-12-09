@@ -94,6 +94,9 @@ public:
 	// LU-разложение
 	void LUDecomp(Matrix<variableType>&, Matrix<variableType>&);
 
+	// LDLT-разложение
+	void LDLDecomp(Matrix<variableType>&, Matrix<variableType>&);
+
 	// Разложение Холецкого
 	void cholesky(Matrix<variableType>&);
 
@@ -152,6 +155,14 @@ public:
 
 	// Конструктор копирования
 	VectorT(vector<variableType> v1) : v(v1) {}
+
+	VectorT(const initializer_list<variableType>& list) : v(list.size()) {
+		int count = 0;
+		for (auto& el : list) {
+			v[count] = el;
+			++count;
+		}
+	}
 
 	// Размер вектора VectorT
 	int size();

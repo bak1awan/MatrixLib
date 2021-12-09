@@ -31,6 +31,37 @@ void Matrix<variableType>::LUDecomp(Matrix<variableType>& L, Matrix<variableType
 	}
 }
 
+// LDLT-разложение
+template<typename variableType>
+void Matrix<variableType>::LDLDecomp(Matrix<variableType>& L, Matrix<variableType>& D) {
+	// Копируем матрицу во внутреннюю переменную
+	Matrix<variableType> A(*this);
+
+	// Алгоритм для получения элементов матриц L и D
+	for (int k = 0; k < rows - 1; k++) {
+		for (int i = k + 1; i < rows; i++) {
+			A[i][k] /= A[k][k];
+			for (int j = k + 1; j < rows; j++) {
+				A[i][j] -= A[i][k] * A[k][j];
+			}
+		}
+	}
+
+	// Записываем по главной диагонали матрицы D элементы с главной диагонали полученной матрицы A
+	// а матрице L по главной диагонали выставляем единицы
+	for (int i = 0; i < rows; i++) {
+		D[i][i] = A[i][i];
+		L[i][i] = 1;
+	}
+
+	// Заполняем элементы ниже главной диагонали матрицы L элементами ниже главной диагонали из матрицы A
+	for (int i = rows / 2; i < rows; i++) {
+		for (int j = 0; j < i; j++) {
+			L[i][j] = A[i][j];
+		}
+	}
+}
+
 // Разложение Холецкого
 template<typename variableType>
 void Matrix<variableType>::cholesky(Matrix<variableType>& L) {
